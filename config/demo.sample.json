@@ -1,0 +1,21 @@
+{
+  "app_title": "Enterprise Domain Intelligence",
+  "app_subtitle": "A governed Foundry router across Microsoft Fabric data agents.",
+  "production_warning": "DEMONSTRATION AND EXAMPLE SOFTWARE ONLY - NOT FOR PRODUCTION USE.",
+  "history_context_messages": 8,
+  "show_routing_evidence": true,
+  "sample_prompts": [
+    {
+      "label": "Domain question",
+      "prompt": "Summarize the most important current findings in the available domain."
+    },
+    {
+      "label": "Cross-domain question",
+      "prompt": "Compare the most important trends across the configured domains."
+    },
+    {
+      "label": "Ambiguous question",
+      "prompt": "How is performance?"
+    }
+  ]
+}

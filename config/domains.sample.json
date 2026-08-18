@@ -1,0 +1,14 @@
+{
+  "domains": [
+    {
+      "key": "example-domain",
+      "label": "Example Domain",
+      "workspace_id": "00000000-0000-0000-0000-000000000000",
+      "workspace_name": "Example Workspace",
+      "data_agent_id": "00000000-0000-0000-0000-000000000000",
+      "data_agent_name": "Example Data Agent",
+      "description": "Describe the business questions that belong to this domain.",
+      "instructions": "Use the Fabric data agent for every domain-data question. Preserve units and time periods. Never invent unavailable data."
+    }
+  ]
+}
