@@ -14,5 +14,6 @@ data/
 *.sqlite
 *.sqlite3
 *.log
+~$*.pptx
 .DS_Store
 Thumbs.db
