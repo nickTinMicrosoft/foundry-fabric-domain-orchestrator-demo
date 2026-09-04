@@ -7,4 +7,6 @@ if (-not (Test-Path ".venv\Scripts\python.exe")) {
     throw "Create .venv and install requirements.txt before starting the demo."
 }
 
-& ".\.venv\Scripts\python.exe" -m streamlit run app.py
+& ".\.venv\Scripts\python.exe" -m streamlit run app.py `
+    --server.headless true `
+    --browser.gatherUsageStats false

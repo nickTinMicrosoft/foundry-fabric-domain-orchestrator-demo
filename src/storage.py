@@ -141,9 +141,10 @@ class CosmosChatStore:
     def __init__(
         self,
         endpoint: str,
-        key: str,
+        key: str | None,
         database_name: str,
         container_name: str,
+        create_resources: bool = True,
     ):
         try:
             from azure.cosmos import CosmosClient, PartitionKey
@@ -151,12 +152,31 @@ class CosmosChatStore:
             raise RuntimeError(
                 "Install requirements-storage.txt for Cosmos DB support"
             ) from error
-        client = CosmosClient(endpoint, credential=key)
-        database = client.create_database_if_not_exists(database_name)
-        self._container = database.create_container_if_not_exists(
-            id=container_name,
-            partition_key=PartitionKey(path="/user_id"),
+        if key:
+            credential = key
+        else:
+            from azure.identity import DefaultAzureCredential
+
+            credential = DefaultAzureCredential(
+                exclude_interactive_browser_credential=True
+            )
+        client_options = (
+            {"connection_mode": "Gateway"} if not create_resources else {}
         )
+        client = CosmosClient(
+            endpoint,
+            credential=credential,
+            **client_options,
+        )
+        if create_resources:
+            database = client.create_database_if_not_exists(database_name)
+            self._container = database.create_container_if_not_exists(
+                id=container_name,
+                partition_key=PartitionKey(path="/user_id"),
+            )
+        else:
+            database = client.get_database_client(database_name)
+            self._container = database.get_container_client(container_name)
 
     def list_conversations(self, user_id: str) -> list[str]:
         items = self._container.query_items(
@@ -201,6 +221,22 @@ class CosmosChatStore:
                 "messages": [asdict(message) for message in messages],
                 "updated_at": datetime.now(timezone.utc).isoformat(),
             }
+        )
+
+
+class FabricCosmosChatStore(CosmosChatStore):
+    def __init__(
+        self,
+        endpoint: str,
+        database_name: str,
+        container_name: str,
+    ):
+        super().__init__(
+            endpoint=endpoint,
+            key=None,
+            database_name=database_name,
+            container_name=container_name,
+            create_resources=False,
         )
 
 
@@ -304,9 +340,15 @@ def create_chat_store() -> ChatStore:
     if provider == "cosmos":
         return CosmosChatStore(
             endpoint=os.environ["COSMOS_ENDPOINT"],
-            key=os.environ["COSMOS_KEY"],
+            key=os.getenv("COSMOS_KEY"),
             database_name=os.getenv("COSMOS_DATABASE", "foundry-demo"),
             container_name=os.getenv("COSMOS_CONTAINER", "chat-history"),
+        )
+    if provider == "fabric-cosmos":
+        return FabricCosmosChatStore(
+            endpoint=os.environ["FABRIC_COSMOS_ENDPOINT"],
+            database_name=os.environ["FABRIC_COSMOS_DATABASE"],
+            container_name=os.environ["FABRIC_COSMOS_CONTAINER"],
         )
     if provider == "sql":
         return SqlAlchemyChatStore(os.environ["CHAT_SQL_URL"])

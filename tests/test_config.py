@@ -12,10 +12,12 @@ class ConfigTests(unittest.TestCase):
         self.assertIn("app_title", config)
         self.assertTrue(config["sample_prompts"])
 
-    def test_sample_domain_configuration_loads(self):
+    def test_domain_configuration_loads(self):
         domains = load_domains()
-        self.assertEqual("example-domain", domains[0].key)
-        self.assertIn("/v1/mcp/workspaces/", domains[0].server_url)
+        self.assertTrue(domains)
+        self.assertEqual(len(domains), len({domain.key for domain in domains}))
+        for domain in domains:
+            self.assertIn("/v1/mcp/workspaces/", domain.server_url)
 
 
 if __name__ == "__main__":

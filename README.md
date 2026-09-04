@@ -21,7 +21,8 @@ Fabric evaluates the signed-in user's delegated permissions.
   chain-of-thought.
 - Branding and sample prompts are configuration-driven.
 - Chat history can remain ephemeral or persist to SQLite, Azure Cosmos DB,
-  Azure SQL Database, Fabric SQL Database, or Azure SQL Managed Instance.
+  Cosmos DB in Microsoft Fabric, Azure SQL Database, Fabric SQL Database, or
+  Azure SQL Managed Instance.
 
 ## Why the agents are isolated
 
@@ -39,6 +40,9 @@ The router still makes the domain decision in Foundry. Fabric remains the
 authority for downstream data access.
 
 See [docs/architecture.md](docs/architecture.md) for the full flow.
+
+For a native Microsoft Teams conversational interface and App Service hosting
+plan, see [docs/teams-integration.md](docs/teams-integration.md).
 
 ## Prerequisites
 
@@ -142,6 +146,7 @@ The default is `CHAT_STORAGE_PROVIDER=none`.
 | --- | --- |
 | SQLite | `CHAT_STORAGE_PROVIDER=sqlite` and `CHAT_SQLITE_PATH` |
 | Azure Cosmos DB | Install `requirements-storage.txt`; set `COSMOS_*` |
+| Cosmos DB in Microsoft Fabric | Install storage requirements; set `FABRIC_COSMOS_*` |
 | Azure SQL Database | Install storage requirements; set `CHAT_SQL_URL` |
 | Fabric SQL Database | Install storage requirements; set `CHAT_SQL_URL` |
 | Azure SQL Managed Instance | Install storage requirements; set `CHAT_SQL_URL` |
